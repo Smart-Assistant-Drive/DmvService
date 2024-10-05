@@ -2,6 +2,7 @@ package com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.persistence.en
 
 import com.smartassistantdrive.dmvservice.domainLayer.Vehicle
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.index.Indexed
 import java.time.LocalDateTime
 import java.util.*
 
@@ -10,6 +11,7 @@ class VehicleDataSourceModel {
     @Id
     var vin: String? = null
 
+    @Indexed(unique = true)
     var plate: String? = null
 
     var model: String? = null
