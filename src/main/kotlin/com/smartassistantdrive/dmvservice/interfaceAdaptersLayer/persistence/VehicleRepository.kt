@@ -8,4 +8,6 @@ interface VehicleRepository: MongoRepository<VehicleDataSourceModel?, String?> {
     // query
     fun findByPlate(plate: String?): VehicleDataSourceModel?
 
+    fun findByVin(vin: String?): VehicleDataSourceModel?
+
 }
