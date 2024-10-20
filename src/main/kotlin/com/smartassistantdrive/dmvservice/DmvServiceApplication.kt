@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class DmvServiceApplication
 
 fun main(args: Array<String>) {
-    runApplication<DmvServiceApplication>(*args)
+	runApplication<DmvServiceApplication>(*args)
 }

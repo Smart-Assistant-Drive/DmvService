@@ -1,8 +1,8 @@
 package com.smartassistantdrive.dmvservice.businessLayer
 
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.LicenceResponseModel
-import com.smartassistantdrive.dmvservice.businessLayer.boundaries.LicenceInputBoundary
 import com.smartassistantdrive.dmvservice.businessLayer.boundaries.LicenceDataSourceGateway
+import com.smartassistantdrive.dmvservice.businessLayer.boundaries.LicenceInputBoundary
 import com.smartassistantdrive.dmvservice.businessLayer.exception.InvalidLicenceException
 import com.smartassistantdrive.dmvservice.businessLayer.exception.LicenceNotFoundException
 import com.smartassistantdrive.dmvservice.domainLayer.Licence
@@ -10,11 +10,15 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
 class LicenceUseCase(
-	private var licenceDataSourceGateway: LicenceDataSourceGateway
+	private var licenceDataSourceGateway: LicenceDataSourceGateway,
 ) : LicenceInputBoundary {
 
 	override fun addLicence(
-		name: String, surname: String, birthDate: String, licenceCountry: String, residence: String
+		name: String,
+		surname: String,
+		birthDate: String,
+		licenceCountry: String,
+		residence: String,
 	): Result<LicenceResponseModel> {
 		val releaseDate = LocalDate.now()
 		val expireDate = releaseDate.plusYears(10)
@@ -50,14 +54,16 @@ class LicenceUseCase(
 					residence
 				)
 			)
-
 		} catch (e: Exception) {
 			return Result.failure(e)
 		}
 	}
 
 	override fun updateLicence(
-		licenceId: String, newExpireDate: LocalDate, newReleaseDate: LocalDate, newResidence: String
+		licenceId: String,
+		newExpireDate: LocalDate,
+		newReleaseDate: LocalDate,
+		newResidence: String,
 	): Result<LicenceResponseModel> {
 		licenceDataSourceGateway.update(licenceId, newExpireDate, newReleaseDate, newResidence)
 		return getLicence(licenceId)
