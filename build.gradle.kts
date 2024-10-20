@@ -3,6 +3,9 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.6"
+	alias(libs.plugins.gitSemVer)
+	alias(libs.plugins.kotlin.qa)
+	alias(libs.plugins.dokka)
 }
 
 group = "com.smartassistantdrive"
@@ -21,7 +24,6 @@ repositories {
 extra["springCloudVersion"] = "2023.0.3"
 
 dependencies {
-
 	implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
 	implementation("org.springframework.boot:spring-boot-starter-hateoas")
@@ -36,11 +38,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 
-
-
 	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-kotlin
 	runtimeOnly("org.springdoc:springdoc-openapi-kotlin:1.8.0")
-
 
 	testImplementation(libs.mockito.kotlin)
 	testImplementation(libs.archunit)
@@ -68,7 +67,8 @@ tasks.withType<Test> {
 
 tasks.jar {
 	manifest {
-		attributes(mapOf("Implementation-Title" to project.name,
-			"Implementation-Version" to project.version))
+		attributes(
+			mapOf("Implementation-Title" to project.name, "Implementation-Version" to project.version)
+		)
 	}
 }
