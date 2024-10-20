@@ -10,7 +10,7 @@ version = "0.0.1-SNAPSHOT"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(20)
+		languageVersion = JavaLanguageVersion.of(21)
 	}
 }
 
@@ -33,6 +33,18 @@ dependencies {
 	implementation("io.github.resilience4j:resilience4j-spring-boot2")
 	implementation("org.springframework.boot:spring-boot-starter-aop")
 
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-starter-webmvc-ui
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
+
+
+
+	// https://mvnrepository.com/artifact/org.springdoc/springdoc-openapi-kotlin
+	runtimeOnly("org.springdoc:springdoc-openapi-kotlin:1.8.0")
+
+
+	testImplementation(libs.mockito.kotlin)
+	testImplementation(libs.archunit)
+	testImplementation(libs.bundles.cucmber.test)
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
@@ -52,4 +64,11 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+tasks.jar {
+	manifest {
+		attributes(mapOf("Implementation-Title" to project.name,
+			"Implementation-Version" to project.version))
+	}
 }
