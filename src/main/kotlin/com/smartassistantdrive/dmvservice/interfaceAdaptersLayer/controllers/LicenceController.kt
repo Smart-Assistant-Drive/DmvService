@@ -8,7 +8,6 @@ import com.smartassistantdrive.dmvservice.businessLayer.exception.LicenceExistsE
 import com.smartassistantdrive.dmvservice.businessLayer.exception.LicenceNotFoundException
 import com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.controllers.dto.LicenceResponseDto
 import com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.controllers.dto.toDto
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
@@ -36,12 +35,11 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 		private const val TEMPLATE = "Hello, %s!"
 	}
 
-	@CircuitBreaker(name = "CircuitBreakerService", fallbackMethod = "fallback")
 	@GetMapping("/hello")
 	fun hello(@RequestParam(value = "name", defaultValue = "World") name: String?): String {
 		// Esempio dimostrativo CircuitBreaker
-		val i = 4 / 0
-		return String.format("Hello %s!", name)
+		// throw IllegalArgumentException()
+		return "Hello World"
 	}
 
 	@PostMapping("/licences")
@@ -86,7 +84,7 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 		val links =
 			WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(LicenceController::class.java).newLicence(licence))
 				.withSelfRel()
-
+		print("cavolol")
 		val result = input.addLicence(
 			licence.name,
 			licence.surname,
@@ -97,6 +95,7 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 		return if (result.isSuccess) {
 			ResponseEntity(result.getOrNull()!!.toDto(links), HttpStatus.CREATED)
 		} else {
+			result.exceptionOrNull()!!.printStackTrace()
 			when (result.exceptionOrNull()) {
 				is InvalidLicenceException -> ResponseEntity.badRequest().build()
 				is LicenceExistsException -> ResponseEntity.status(HttpStatus.CONFLICT).build()
@@ -111,7 +110,7 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 		description = "Get licence",
 		parameters = [
 			Parameter(
-				name = "licenceId",
+				name = "id",
 				description = "Licence id to be retrieved"
 			)
 		],
@@ -224,9 +223,5 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 				else -> ResponseEntity.internalServerError().build()
 			}
 		}
-	}
-
-	fun fallback(name: String?, e: ArithmeticException): String {
-		return "Some error occurred"
 	}
 }

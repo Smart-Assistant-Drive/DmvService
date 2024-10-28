@@ -3,7 +3,6 @@ package com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.controllers
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.VehicleRequestModel
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.VehicleUpdateModel
 import com.smartassistantdrive.dmvservice.businessLayer.boundaries.VehicleInputBoundary
-import com.smartassistantdrive.dmvservice.businessLayer.exception.InvalidLicenceException
 import com.smartassistantdrive.dmvservice.businessLayer.exception.InvalidVehicleException
 import com.smartassistantdrive.dmvservice.businessLayer.exception.VehicleExistsException
 import com.smartassistantdrive.dmvservice.businessLayer.exception.VehicleNotFoundException
@@ -15,7 +14,6 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
-import java.time.LocalDate
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpStatus
@@ -76,15 +74,13 @@ class VehicleController(val vehicleInput: VehicleInputBoundary) {
 		val links = WebMvcLinkBuilder.linkTo(
 			WebMvcLinkBuilder.methodOn(VehicleController::class.java).addCar(vehicleRequestModel)
 		).withSelfRel()
-
-		val registrationDate = LocalDate.parse(vehicleRequestModel.registrationDate)
 		val result = vehicleInput.addCar(
 			vehicleRequestModel.vin,
 			vehicleRequestModel.plate,
 			vehicleRequestModel.model,
 			vehicleRequestModel.cv,
 			vehicleRequestModel.cc,
-			registrationDate
+			vehicleRequestModel.registrationDate
 		)
 
 		return if (result.isSuccess) {
@@ -258,15 +254,15 @@ class VehicleController(val vehicleInput: VehicleInputBoundary) {
 			WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(VehicleController::class.java).updateCar(car, vin))
 				.withSelfRel()
 
-		val registrationDate = LocalDate.parse(car.newRegistrationDate)
-
-		val result = vehicleInput.updateCar(vin, car.newPlate, registrationDate)
+		val result = vehicleInput.updateCar(vin, car.newPlate, car.newRegistrationDate)
 
 		return if (result.isSuccess) {
 			ResponseEntity(result.getOrNull()!!.toDto(links), HttpStatus.CREATED)
 		} else {
+			// TODO rimuovere le printstacktrace???
+			result.exceptionOrNull()!!.printStackTrace()
 			when (result.exceptionOrNull()) {
-				is InvalidLicenceException -> ResponseEntity.badRequest().build()
+				is InvalidVehicleException -> ResponseEntity.badRequest().build()
 				is VehicleNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()
 				else -> ResponseEntity.internalServerError().build()
 			}

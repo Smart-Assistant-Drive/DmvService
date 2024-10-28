@@ -13,6 +13,8 @@ class LicenceUseCase(
 	private var licenceDataSourceGateway: LicenceDataSourceGateway,
 ) : LicenceInputBoundary {
 
+	val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+
 	override fun addLicence(
 		name: String,
 		surname: String,
@@ -28,7 +30,6 @@ class LicenceUseCase(
 		}
 
 		try {
-			val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
 			val birthDateConverted = LocalDate.parse(birthDate, formatter)
 
 			val licence = Licence.create(
@@ -61,11 +62,11 @@ class LicenceUseCase(
 
 	override fun updateLicence(
 		licenceId: String,
-		newExpireDate: LocalDate,
-		newReleaseDate: LocalDate,
+		newExpireDate: String,
+		newReleaseDate: String,
 		newResidence: String,
 	): Result<LicenceResponseModel> {
-		licenceDataSourceGateway.update(licenceId, newExpireDate, newReleaseDate, newResidence)
+		licenceDataSourceGateway.update(licenceId, LocalDate.parse(newExpireDate, formatter), LocalDate.parse(newReleaseDate, formatter), newResidence)
 		return getLicence(licenceId)
 	}
 
