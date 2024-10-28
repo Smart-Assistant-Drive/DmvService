@@ -1,7 +1,6 @@
 package com.smartassistantdrive.dmvservice.businessLayer.boundaries
 
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.LicenceResponseModel
-import java.time.LocalDate
 
 interface LicenceInputBoundary {
 	// licence management
@@ -16,8 +15,8 @@ interface LicenceInputBoundary {
 
 	fun updateLicence(
 		licenceId: String,
-		newExpireDate: LocalDate,
-		newReleaseDate: LocalDate,
+		newExpireDate: String,
+		newReleaseDate: String,
 		newResidence: String,
 	): Result<LicenceResponseModel>
 
