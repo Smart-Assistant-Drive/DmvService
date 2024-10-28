@@ -20,8 +20,8 @@ class LicenceResponseDto @JsonCreator constructor(
 
 fun LicenceResponseModel.toDto(link: Link): LicenceResponseDto {
 	val birthdateTime = birthDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
-	val expiredateTime = expireDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"))
-	val releasedateTime = releaseDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm"))
+	val expiredateTime = expireDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+	val releasedateTime = releaseDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
 	return LicenceResponseDto(
 		licenceId,
 		name,
