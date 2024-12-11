@@ -5,20 +5,41 @@ import java.time.LocalDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 
+/**
+ *
+ */
 class VehicleDataSourceModel {
 
+	/**
+	 *
+	 */
 	@Id
 	var vin: String? = null
 
+	/**
+	 *
+	 */
 	@Indexed(unique = true)
 	var plate: String? = null
 
+	/**
+	 *
+	 */
 	var model: String? = null
 
+	/**
+	 *
+	 */
 	var cv: Int? = null
 
+	/**
+	 *
+	 */
 	var cc: Int? = null
 
+	/**
+	 *
+	 */
 	var registrationDate: LocalDate? = null
 
 	constructor()
@@ -32,6 +53,9 @@ class VehicleDataSourceModel {
 		this.registrationDate = vehicle.registrationDate
 	}
 
+	/**
+	 *
+	 */
 	fun getVehicleModel(): Vehicle {
 		return Vehicle.create(
 			vin!!,

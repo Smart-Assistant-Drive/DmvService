@@ -9,10 +9,13 @@ import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class FirewallFilter() : Filter {
+/**
+ *
+ */
+class FirewallFilter : Filter {
 
 	private val allowedIPs: ArrayList<String> = ArrayList()
-	var logger: Logger = LoggerFactory.getLogger(FirewallFilter::class.java)
+	private var logger: Logger = LoggerFactory.getLogger(FirewallFilter::class.java)
 
 	init {
 		allowedIPs.add("127.0.0.1")
@@ -37,19 +40,17 @@ class FirewallFilter() : Filter {
 	private fun getClientIP(request: HttpServletRequest): String? {
 		var clientIP = request.getHeader("X-Forwarded-For")
 		if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
-			clientIP = request.getHeader("Proxy-Client-IP")
-		}
-		if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
-			clientIP = request.getHeader("WL-Proxy-Client-IP")
-		}
-		if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
 			clientIP = request.getHeader("HTTP_CLIENT_IP")
-		}
-		if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
-			clientIP = request.getHeader("HTTP_X_FORWARDED_FOR")
-		}
-		if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
-			clientIP = request.remoteAddr
+		} else {
+			if (clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
+				clientIP = request.getHeader("Proxy-Client-IP")
+			}
+			if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
+				clientIP = request.getHeader("HTTP_X_FORWARDED_FOR")
+			}
+			if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
+				clientIP = request.remoteAddr
+			}
 		}
 		return clientIP
 	}

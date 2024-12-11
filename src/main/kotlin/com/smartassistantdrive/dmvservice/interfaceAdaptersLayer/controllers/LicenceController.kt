@@ -26,22 +26,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ *
+ */
 @RestController
 class LicenceController(licenceInput: LicenceInputBoundary) {
 
-	val input = licenceInput
+	private val input = licenceInput
 
-	companion object {
-		private const val TEMPLATE = "Hello, %s!"
-	}
-
-	@GetMapping("/hello")
-	fun hello(@RequestParam(value = "name", defaultValue = "World") name: String?): String {
-		// Esempio dimostrativo CircuitBreaker
-		// throw IllegalArgumentException()
-		return "Hello World"
-	}
-
+	/**
+	 *
+	 */
 	@PostMapping("/licences")
 	@Operation(
 		summary = "Create licence",
@@ -104,6 +99,9 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 		}
 	}
 
+	/**
+	 *
+	 */
 	@GetMapping("/licence")
 	@Operation(
 		summary = "Get licence",
@@ -156,6 +154,9 @@ class LicenceController(licenceInput: LicenceInputBoundary) {
 		}
 	}
 
+	/**
+	 *
+	 */
 	@PutMapping("/licences/{id}")
 	@Operation(
 		summary = "Update vehicle",

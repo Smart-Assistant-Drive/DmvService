@@ -5,6 +5,10 @@ import com.smartassistantdrive.dmvservice.domainLayer.Licence
 import com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.persistence.entity.LicenceDataSourceModel
 import java.time.LocalDate
 
+/**
+ *
+ */
+@Suppress("TooGenericExceptionCaught")
 class LicenceDataSourceGatewayImpl(private val licenceRepository: LicenceRepository) : LicenceDataSourceGateway {
 	override fun save(licence: Licence): Result<String> {
 		val result = licenceRepository.save(LicenceDataSourceModel(licence))

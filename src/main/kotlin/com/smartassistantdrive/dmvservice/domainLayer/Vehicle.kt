@@ -2,23 +2,53 @@ package com.smartassistantdrive.dmvservice.domainLayer
 
 import java.time.LocalDate
 
-public interface Vehicle {
+/**
+ *
+ */
+interface Vehicle {
 
+	/**
+	 *
+	 */
 	val vin: String
 
+	/**
+	 *
+	 */
 	val plate: String
 
+	/**
+	 *
+	 */
 	val model: String
 
+	/**
+	 *
+	 */
 	val cv: Int
 
+	/**
+	 *
+	 */
 	val cc: Int
 
+	/**
+	 *
+	 */
 	val registrationDate: LocalDate
 
+	/**
+	 *
+	 */
 	fun isPlateValid(): Boolean
 
+	/**
+	 *
+	 */
 	companion object {
+		/**
+		 *
+		 */
 		fun create(vin: String, plate: String, model: String, cv: Int, cc: Int, registrationDate: LocalDate): Vehicle {
 			return object : Vehicle {
 				override val vin: String

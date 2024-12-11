@@ -26,9 +26,17 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
+/**
+ *
+ */
 @RestController
-class VehicleController(val vehicleInput: VehicleInputBoundary) {
+class VehicleController(
+	private val vehicleInput: VehicleInputBoundary,
+) {
 
+	/**
+	 *
+	 */
 	@PostMapping("/addCar")
 	@Operation(
 		summary = "Add vehicle",
@@ -94,6 +102,9 @@ class VehicleController(val vehicleInput: VehicleInputBoundary) {
 		}
 	}
 
+	/**
+	 *
+	 */
 	@GetMapping("/carByVin")
 	@Operation(
 		summary = "Get vehicle",
@@ -143,6 +154,9 @@ class VehicleController(val vehicleInput: VehicleInputBoundary) {
 		}
 	}
 
+	/**
+	 *
+	 */
 	@GetMapping("/carByPlate")
 	@Operation(
 		summary = "Get vehicle",
@@ -198,6 +212,9 @@ class VehicleController(val vehicleInput: VehicleInputBoundary) {
 		}
 	}
 
+	/**
+	 *
+	 */
 	@PutMapping("/cars/{vin}")
 	@Operation(
 		summary = "Update vehicle",

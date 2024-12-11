@@ -2,9 +2,15 @@ package com.smartassistantdrive.dmvservice.businessLayer.boundaries
 
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.LicenceResponseModel
 
+/**
+ *
+ */
 interface LicenceInputBoundary {
 	// licence management
 
+	/**
+	 *
+	 */
 	fun addLicence(
 		name: String,
 		surname: String,
@@ -13,6 +19,9 @@ interface LicenceInputBoundary {
 		residence: String,
 	): Result<LicenceResponseModel>
 
+	/**
+	 *
+	 */
 	fun updateLicence(
 		licenceId: String,
 		newExpireDate: String,
@@ -20,5 +29,8 @@ interface LicenceInputBoundary {
 		newResidence: String,
 	): Result<LicenceResponseModel>
 
+	/**
+	 *
+	 */
 	fun getLicence(licenceId: String): Result<LicenceResponseModel>
 }

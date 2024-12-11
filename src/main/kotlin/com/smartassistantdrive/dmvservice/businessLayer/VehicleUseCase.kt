@@ -9,8 +9,16 @@ import com.smartassistantdrive.dmvservice.businessLayer.exception.VehicleNotFoun
 import com.smartassistantdrive.dmvservice.domainLayer.Vehicle
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
+/**
+ *
+ */
+@Suppress("TooGenericExceptionCaught")
 class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGateway) : VehicleInputBoundary {
+
+	private var logger: Logger = LoggerFactory.getLogger(VehicleUseCase::class.java)
 
 	override fun addCar(
 		vin: String,
@@ -24,20 +32,15 @@ class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGate
 		try {
 			val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 			registrationLocalDate = LocalDate.parse(registrationDate, formatter)
-			if (vin.isEmpty() || plate.isEmpty() || model.isEmpty() || cv == 0 || cc == 0 || registrationLocalDate > LocalDate.now()) {
-				return Result.failure(
-					InvalidVehicleException()
-				)
+			if (vin.isEmpty() || plate.isEmpty() || model.isEmpty()) {
+				throw InvalidVehicleException()
 			}
-		} catch (e: Exception) {
-			return Result.failure(
-				InvalidVehicleException()
-			)
-		}
+			if (cv == 0 || cc == 0 || registrationLocalDate > LocalDate.now()) {
+				throw InvalidVehicleException()
+			}
 
-		if (exists(vin, plate)) return Result.failure(VehicleExistsException())
+			if (exists(vin, plate)) throw VehicleExistsException()
 
-		try {
 			val vehicle: Vehicle = Vehicle.create(
 				vin,
 				plate,
@@ -49,6 +52,7 @@ class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGate
 			vehicleDataSourceGateway.saveNewVehicle(vehicle)
 			return getCarByVin(vin)
 		} catch (e: Exception) {
+			logger.error(e.toString())
 			return Result.failure(e)
 		}
 	}
@@ -63,19 +67,11 @@ class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGate
 			val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 			registrationDate = LocalDate.parse(newRegistrationDate, formatter)
 			if (vin.isEmpty() || newPlate.isEmpty() || registrationDate > LocalDate.now()) {
-				return Result.failure(
-					InvalidVehicleException()
-				)
+				throw InvalidVehicleException()
 			}
-		} catch (e: Exception) {
-			return Result.failure(
-				InvalidVehicleException()
-			)
-		}
 
-		if (!exists(vin)) return Result.failure(VehicleNotFoundException())
+			if (!exists(vin)) throw VehicleNotFoundException()
 
-		try {
 			val updatedVehicle = vehicleDataSourceGateway.updateVehicle(vin, newPlate, registrationDate)
 			return Result.success(
 				VehicleResponseModel(
@@ -83,6 +79,7 @@ class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGate
 				)
 			)
 		} catch (e: Exception) {
+			logger.error(e.toString())
 			return Result.failure(e)
 		}
 	}
@@ -96,6 +93,7 @@ class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGate
 				)
 			)
 		} catch (e: NullPointerException) {
+			logger.error(e.toString())
 			return Result.failure(VehicleNotFoundException())
 		}
 	}
@@ -109,6 +107,7 @@ class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGate
 				)
 			)
 		} catch (e: NullPointerException) {
+			logger.error(e.toString())
 			return Result.failure(VehicleNotFoundException())
 		}
 	}

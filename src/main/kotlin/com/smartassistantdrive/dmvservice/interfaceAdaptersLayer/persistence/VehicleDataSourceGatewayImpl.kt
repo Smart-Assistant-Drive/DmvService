@@ -5,6 +5,9 @@ import com.smartassistantdrive.dmvservice.domainLayer.Vehicle
 import com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.persistence.entity.VehicleDataSourceModel
 import java.time.LocalDate
 
+/**
+ *
+ */
 class VehicleDataSourceGatewayImpl(private val vehicleRepository: VehicleRepository) : VehicleDataSourceGateway {
 
 	override fun saveNewVehicle(vehicle: Vehicle) {

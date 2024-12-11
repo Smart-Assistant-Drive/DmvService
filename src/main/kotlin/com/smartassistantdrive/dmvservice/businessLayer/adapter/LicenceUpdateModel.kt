@@ -2,8 +2,22 @@ package com.smartassistantdrive.dmvservice.businessLayer.adapter
 
 private const val NA = "NA"
 
+/**
+ *
+ */
 data class LicenceUpdateModel(
-	val expireDate: String,
-	val releaseDate: String,
-	val residence: String,
+	/**
+	 *
+	 */
+	val expireDate: String = NA,
+
+	/**
+	 *
+	 */
+	val releaseDate: String = NA,
+
+	/**
+	 *
+	 */
+	val residence: String = NA,
 )

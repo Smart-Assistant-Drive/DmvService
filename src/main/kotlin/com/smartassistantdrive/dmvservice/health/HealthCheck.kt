@@ -8,10 +8,14 @@ import org.springframework.boot.actuate.health.HealthIndicator
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 
+/**
+ *
+ */
 @Component("tracing")
+@Suppress("TooGenericExceptionCaught")
 class HealthCheck : HealthIndicator {
 
-	var logger: Logger = LoggerFactory.getLogger(HealthCheck::class.java)
+	private var logger: Logger = LoggerFactory.getLogger(HealthCheck::class.java)
 
 	override fun health(): Health {
 		val pair = check() // perform some specific health check
@@ -21,6 +25,9 @@ class HealthCheck : HealthIndicator {
 		return Health.up().withDetail("services", JsonObject(pair.second)).build()
 	}
 
+	/**
+	 *
+	 */
 	fun check(): Pair<Int, String> {
 		try {
 			// zipkin service check

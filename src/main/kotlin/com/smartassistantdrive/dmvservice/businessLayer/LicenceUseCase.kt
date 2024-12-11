@@ -8,12 +8,19 @@ import com.smartassistantdrive.dmvservice.businessLayer.exception.LicenceNotFoun
 import com.smartassistantdrive.dmvservice.domainLayer.Licence
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
+/**
+ *
+ */
+@Suppress("TooGenericExceptionCaught")
 class LicenceUseCase(
 	private var licenceDataSourceGateway: LicenceDataSourceGateway,
 ) : LicenceInputBoundary {
 
-	val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+	private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+	private var logger: Logger = LoggerFactory.getLogger(LicenceUseCase::class.java)
 
 	override fun addLicence(
 		name: String,
@@ -25,11 +32,12 @@ class LicenceUseCase(
 		val releaseDate = LocalDate.now()
 		val expireDate = releaseDate.plusYears(10)
 
-		if (residence.isEmpty() || name.isEmpty() || surname.isEmpty() || licenceCountry.isEmpty()) {
-			return Result.failure(InvalidLicenceException())
-		}
-
 		try {
+			val validity: Boolean = residence.isEmpty() || name.isEmpty() || surname.isEmpty() || licenceCountry.isEmpty()
+			if (validity) {
+				throw InvalidLicenceException()
+			}
+
 			val birthDateConverted = LocalDate.parse(birthDate, formatter)
 
 			val licence = Licence.create(
@@ -56,6 +64,7 @@ class LicenceUseCase(
 				)
 			)
 		} catch (e: Exception) {
+			logger.error(e.toString())
 			return Result.failure(e)
 		}
 	}
@@ -66,7 +75,12 @@ class LicenceUseCase(
 		newReleaseDate: String,
 		newResidence: String,
 	): Result<LicenceResponseModel> {
-		licenceDataSourceGateway.update(licenceId, LocalDate.parse(newExpireDate, formatter), LocalDate.parse(newReleaseDate, formatter), newResidence)
+		licenceDataSourceGateway.update(
+			licenceId,
+			LocalDate.parse(newExpireDate, formatter),
+			LocalDate.parse(newReleaseDate, formatter),
+			newResidence
+		)
 		return getLicence(licenceId)
 	}
 
@@ -87,6 +101,7 @@ class LicenceUseCase(
 				)
 			)
 		} catch (e: NullPointerException) {
+			logger.error(e.toString())
 			return Result.failure(LicenceNotFoundException())
 		}
 	}

@@ -12,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
+/**
+ * Configuration class of the Rest Application.
+ */
 @Configuration
 class AppConfig {
 
@@ -21,6 +24,9 @@ class AppConfig {
 	@Autowired
 	private val licenceRepository: LicenceRepository? = null
 
+	/**
+	 *
+	 */
 	@Bean
 	fun licenceInput(): LicenceInputBoundary {
 		val licenceRepository: LicenceRepository = licenceRepository!!
@@ -30,6 +36,9 @@ class AppConfig {
 		return licenceUseCase
 	}
 
+	/**
+	 *
+	 */
 	@Bean
 	fun vehicleInput(): VehicleInputBoundary {
 		val vehicleRepository: VehicleRepository = vehicleRepository!!

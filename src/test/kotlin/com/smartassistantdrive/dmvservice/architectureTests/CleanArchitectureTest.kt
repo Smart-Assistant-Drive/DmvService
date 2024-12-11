@@ -29,11 +29,11 @@ class CleanArchitectureTest {
 			.layer("Business").definedBy("..businessLayer..")
 			.layer("Controller").definedBy("..interfaceAdaptersLayer.controllers..")
 			.layer("Persistence").definedBy("..interfaceAdaptersLayer.persistence..")
-			// .layer("Security").definedBy("..interfaceAdaptersLayer.security..")
+			.layer("Security").definedBy("..interfaceAdaptersLayer.security..")
 			.whereLayer("Persistence").mayNotBeAccessedByAnyLayer()
 			.whereLayer("Controller").mayNotBeAccessedByAnyLayer()
-			// .whereLayer("Security").mayNotBeAccessedByAnyLayer()
-			.whereLayer("Business").mayOnlyBeAccessedByLayers("Controller", "Persistence")
+			.whereLayer("Security").mayNotBeAccessedByAnyLayer()
+			.whereLayer("Business").mayOnlyBeAccessedByLayers("Controller", "Persistence", "Security")
 
 		ruleEverythingPassThroughBusinessLayer.check(importedClasses)
 	}
