@@ -14,7 +14,9 @@ docker run --name mongo --network my-network -p 27017:27017 -d mongodb/mongodb-c
 docker run -d --network my-network --name mongo -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=mongoadmin -e MONGO_INITDB_ROOT_PASSWORD=secret mongo
 ```
 
-Start Mongo Express service via command line
+Start Mongo Express service via command line, using the following credentials for browser app:
+- Username: admin
+- Password: pass
 ```
 docker run --name mongoexpress --network my-network -e ME_CONFIG_MONGODB_SERVER=mongo -e ME_CONFIG_MONGODB_AUTH_USERNAME=mongoadmin -e ME_CONFIG_MONGODB_AUTH_PASSWORD=secret -p 8081:8081 mongo-express
 ```

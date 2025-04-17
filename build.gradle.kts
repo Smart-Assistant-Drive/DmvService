@@ -1,7 +1,7 @@
 plugins {
 	kotlin("jvm") version "2.0.10"
 	kotlin("plugin.spring") version "1.9.25"
-	id("org.springframework.boot") version "3.3.4"
+	id("org.springframework.boot") version "3.3.3"
 	id("io.spring.dependency-management") version "1.1.6"
 	alias(libs.plugins.gitSemVer)
 	alias(libs.plugins.kotlin.qa)
@@ -70,5 +70,13 @@ tasks.jar {
 		attributes(
 			mapOf("Implementation-Title" to project.name, "Implementation-Version" to project.version)
 		)
+	}
+}
+
+configurations.matching { it.name == "detekt" }.all {
+	resolutionStrategy.eachDependency {
+		if (requested.group == "org.jetbrains.kotlin") {
+			useVersion(io.gitlab.arturbosch.detekt.getSupportedKotlinVersion())
+		}
 	}
 }

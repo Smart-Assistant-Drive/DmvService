@@ -39,7 +39,7 @@ class LicenceUseCase(
 			}
 
 			val birthDateConverted = LocalDate.parse(birthDate, formatter)
-
+			val id = licenceDataSourceGateway.getNewId().toString()
 			val licence = Licence.create(
 				name,
 				surname,
@@ -48,12 +48,15 @@ class LicenceUseCase(
 				expireDate,
 				releaseDate,
 				residence,
-				licenceDataSourceGateway.getNewId().toString()
+				id
 			)
-			val result = licenceDataSourceGateway.save(licence)
+			val saved = licenceDataSourceGateway.save(licence)
+			println("TYPE SAVED: " + saved.javaClass.name)
+			println("TYPE SAVED: " + saved.getOrNull()!!.javaClass.name)
+			val test: String = saved.getOrNull()!!
 			return Result.success(
 				LicenceResponseModel(
-					result.getOrNull()!!,
+					id,
 					name,
 					surname,
 					birthDateConverted,
@@ -86,7 +89,8 @@ class LicenceUseCase(
 
 	override fun getLicence(licenceId: String): Result<LicenceResponseModel> {
 		try {
-			val licence = licenceDataSourceGateway.getLicence(licenceId).getOrNull()!!
+			val licenceObtained = licenceDataSourceGateway.getLicence(licenceId)
+			val licence: Licence = licenceObtained.getOrNull()!!
 
 			return Result.success(
 				LicenceResponseModel(

@@ -1,15 +1,17 @@
 package com.smartassistantdrive.dmvservice.businessLayer
 
 import com.smartassistantdrive.dmvservice.businessLayer.boundaries.LicenceDataSourceGateway
+import com.smartassistantdrive.dmvservice.domainLayer.Licence
 import io.cucumber.java.en.Given
+import io.cucumber.java.en.Then
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlin.test.assertEquals
 import org.junit.runner.RunWith
 import org.mockito.kotlin.any
-import org.mockito.kotlin.doAnswer
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.whenever
 
 @RunWith(Cucumber::class)
 @CucumberOptions(
@@ -18,26 +20,37 @@ import org.mockito.kotlin.mock
 )
 class CreateLicenceTest {
 
-	private var name: String? = null
-	private var surname: String? = null
-	private var birthDate: LocalDate? = null
+	private lateinit var name: String
+	private lateinit var surname: String
+	private lateinit var birthDate: String
 
-	/* private var licenceId: String? = null
-	private var licenceCountry: String? = null
-	private var expireDate: LocalDate? = null
-	private var releaseDate: LocalDate? = null */
+	private lateinit var licenceId: String
+	private lateinit var licenceCountry: String
+	private lateinit var expireDate: LocalDate
+	private lateinit var releaseDate: LocalDate
 
-	private var residence: String? = null
+	private lateinit var residence: String
 
-	private val interaction: LicenceUseCase
+	private var interaction: LicenceUseCase
 
-	private val licenceDataSourceGateway = mock<LicenceDataSourceGateway> {
-		on {
-			save(any())
-		} doAnswer { Result.success("OK") }
-	}
+	val db = ArrayList<Licence>()
+
+	private val licenceDataSourceGateway = mock<LicenceDataSourceGateway>()
 
 	init {
+		whenever(licenceDataSourceGateway.save(any<Licence>())).thenAnswer {
+			val licenceArgument = it.arguments[0] as Licence
+			db.add(licenceArgument)
+			licenceArgument.licenceId
+		}
+		whenever(licenceDataSourceGateway.getLicence(any<String>())).thenAnswer {
+			val idArg = it.arguments[0] as String
+			val returnValue: Licence = db.first { it.licenceId == idArg }
+			returnValue
+		}
+		whenever(licenceDataSourceGateway.getNewId()).thenAnswer {
+			123L
+		}
 		interaction = LicenceUseCase(licenceDataSourceGateway)
 	}
 
@@ -45,6 +58,10 @@ class CreateLicenceTest {
 	fun the_user_inserts_its_name(name: String, surname: String) {
 		this.name = name
 		this.surname = surname
+		this.licenceId = "123"
+		this.licenceCountry = "Italy"
+		this.releaseDate = LocalDate.now()
+		this.expireDate = LocalDate.now().plusYears(10)
 	}
 
 	@Given("the driver lives in {string}")
@@ -54,6 +71,13 @@ class CreateLicenceTest {
 
 	@Given("and he was born in {string}")
 	fun the_user_inserts_its_name(birthdate: String) {
-		this.birthDate = LocalDate.parse(birthdate, DateTimeFormatter.ofPattern("dd-MM-yyyy"))
+		this.birthDate = birthdate
+	}
+
+	@Then("the creation of the licence should be correct")
+	fun `then the creation of the licence should be correct`() {
+		val id = interaction.addLicence(name, surname, birthDate, licenceCountry, residence).getOrNull()?.licenceId!!
+		val licenceAdded = interaction.getLicence(id)
+		assertEquals(this.name, licenceAdded.getOrNull()?.name)
 	}
 }
