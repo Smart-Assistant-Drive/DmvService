@@ -43,8 +43,8 @@ class CreateLicenceTest {
 			db.add(licenceArgument)
 			licenceArgument.licenceId
 		}
-		whenever(licenceDataSourceGateway.getLicence(any<String>())).thenAnswer {
-			val idArg = it.arguments[0] as String
+		whenever(licenceDataSourceGateway.getLicence(any<String>())).thenAnswer { request ->
+			val idArg = request.arguments[0] as String
 			val returnValue: Licence = db.first { it.licenceId == idArg }
 			returnValue
 		}

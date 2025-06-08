@@ -20,7 +20,7 @@ class LicenceUseCase(
 ) : LicenceInputBoundary {
 
 	private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
-	private var logger: Logger = LoggerFactory.getLogger(LicenceUseCase::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(LicenceUseCase::class.java)
 
 	override fun addLicence(
 		name: String,
@@ -30,7 +30,7 @@ class LicenceUseCase(
 		residence: String,
 	): Result<LicenceResponseModel> {
 		val releaseDate = LocalDate.now()
-		val expireDate = releaseDate.plusYears(10)
+		val expireDate = releaseDate.plusYears(Companion.MAX_RELEASE_DATE)
 
 		try {
 			val validity: Boolean = residence.isEmpty() || name.isEmpty() || surname.isEmpty() || licenceCountry.isEmpty()
@@ -53,7 +53,7 @@ class LicenceUseCase(
 			val saved = licenceDataSourceGateway.save(licence)
 			println("TYPE SAVED: " + saved.javaClass.name)
 			println("TYPE SAVED: " + saved.getOrNull()!!.javaClass.name)
-			val test: String = saved.getOrNull()!!
+			// val test: String = saved.getOrNull()!!
 			return Result.success(
 				LicenceResponseModel(
 					id,
@@ -108,5 +108,9 @@ class LicenceUseCase(
 			logger.error(e.toString())
 			return Result.failure(LicenceNotFoundException())
 		}
+	}
+
+	companion object {
+		private const val MAX_RELEASE_DATE: Long = 10
 	}
 }

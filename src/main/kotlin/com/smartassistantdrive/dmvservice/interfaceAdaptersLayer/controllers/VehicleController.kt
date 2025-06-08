@@ -1,6 +1,7 @@
 package com.smartassistantdrive.dmvservice.interfaceAdaptersLayer.controllers
 
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.VehicleRequestModel
+import com.smartassistantdrive.dmvservice.businessLayer.adapter.VehicleResponseModel
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.VehicleUpdateModel
 import com.smartassistantdrive.dmvservice.businessLayer.boundaries.VehicleInputBoundary
 import com.smartassistantdrive.dmvservice.businessLayer.exception.InvalidVehicleException
@@ -147,10 +148,7 @@ class VehicleController(
 		return if (result.isSuccess) {
 			ResponseEntity(result.getOrNull()!!.toDto(links), HttpStatus.CREATED)
 		} else {
-			when (result.exceptionOrNull()) {
-				is VehicleNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-				else -> ResponseEntity.internalServerError().build()
-			}
+			checkResult(result)
 		}
 	}
 
@@ -170,7 +168,7 @@ class VehicleController(
 		responses = [
 			ApiResponse(
 				responseCode = "200",
-				description = "Vehicle retrieved successfully",
+				description = "Vehicle retrieved successfully by plate",
 				content = [
 					Content(
 						mediaType = "application/json",
@@ -180,12 +178,12 @@ class VehicleController(
 			),
 			ApiResponse(
 				responseCode = "404",
-				description = "Licence not found",
+				description = "Licence not found by plate",
 				content = [Content()]
 			),
 			ApiResponse(
 				responseCode = "500",
-				description = "Internal server error",
+				description = "Internal server error by plate",
 				content = [Content()]
 			)
 		]
@@ -205,10 +203,17 @@ class VehicleController(
 		return if (result.isSuccess) {
 			ResponseEntity(result.getOrNull()!!.toDto(links), HttpStatus.CREATED)
 		} else {
-			when (result.exceptionOrNull()) {
-				is VehicleNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()
-				else -> ResponseEntity.internalServerError().build()
-			}
+			checkResult(result)
+		}
+	}
+
+	/**
+	 *
+	 */
+	fun checkResult(result: Result<VehicleResponseModel>): HttpEntity<VehicleResponseDto> {
+		return when (result.exceptionOrNull()) {
+			is VehicleNotFoundException -> ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+			else -> ResponseEntity.internalServerError().build()
 		}
 	}
 

@@ -55,6 +55,21 @@ dependencyManagement {
 	}
 }
 
+// build.gradle.kts (del tuo modulo o root del progetto)
+
+detekt {
+	// Indica a Detekt dove trovare il tuo file di configurazione personalizzato
+	// Il percorso è relativo alla root del progetto Gradle.
+	config.setFrom(files("detekt.yml"))
+
+	// Puoi anche decidere se vuoi che la tua configurazione personalizzata
+	// sia costruita SULLA configurazione di default di Detekt.
+	// Se imposti a 'false', la tua config.yml SOVRASCRIVERÀ completamente la default.
+	// Se imposti a 'true', la tua config.yml MODIFICHERÀ solo i valori che specifichi,
+	// lasciando intatte le regole non menzionate nella tua config.
+	buildUponDefaultConfig = true // O false, a seconda di come vuoi gestire i default
+}
+
 kotlin {
 	compilerOptions {
 		freeCompilerArgs.addAll("-Xjsr305=strict")

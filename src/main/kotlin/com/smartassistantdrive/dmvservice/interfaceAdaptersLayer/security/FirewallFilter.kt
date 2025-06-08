@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 class FirewallFilter : Filter {
 
 	private val allowedIPs: ArrayList<String> = ArrayList()
-	private var logger: Logger = LoggerFactory.getLogger(FirewallFilter::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(FirewallFilter::class.java)
 
 	init {
 		allowedIPs.add("127.0.0.1")
@@ -39,16 +39,16 @@ class FirewallFilter : Filter {
 
 	private fun getClientIP(request: HttpServletRequest): String? {
 		var clientIP = request.getHeader("X-Forwarded-For")
-		if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
+		if (clientIP.isNullOrEmpty() || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
 			clientIP = request.getHeader("HTTP_CLIENT_IP")
 		} else {
 			if (clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
 				clientIP = request.getHeader("Proxy-Client-IP")
 			}
-			if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
+			if (clientIP.isNullOrEmpty() || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
 				clientIP = request.getHeader("HTTP_X_FORWARDED_FOR")
 			}
-			if (clientIP == null || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
+			if (clientIP.isNullOrEmpty() || clientIP.isEmpty() || "unknown".equals(clientIP, ignoreCase = true)) {
 				clientIP = request.remoteAddr
 			}
 		}

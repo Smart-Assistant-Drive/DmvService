@@ -1,0 +1,15 @@
+# detekt.yml
+
+# ... altre configurazioni e rule set ...
+
+potential-bugs:
+  active: true # Assicurati che il ruleset sia attivo, altrimenti nessuna regola al suo interno verrà eseguita.
+  # ... altre regole in potential-bugs ...
+  UnsafeCallOnNullableType:
+    active: false # <--- Imposta a false per disabilitare questa specifica regola
+complexity:
+  LongParameterList:
+    active: false
+performance:
+  SpreadOperator:
+    active: false

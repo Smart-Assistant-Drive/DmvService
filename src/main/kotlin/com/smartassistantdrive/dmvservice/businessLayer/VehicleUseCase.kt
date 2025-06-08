@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory
 @Suppress("TooGenericExceptionCaught")
 class VehicleUseCase(private var vehicleDataSourceGateway: VehicleDataSourceGateway) : VehicleInputBoundary {
 
-	private var logger: Logger = LoggerFactory.getLogger(VehicleUseCase::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(VehicleUseCase::class.java)
 
 	override fun addCar(
 		vin: String,

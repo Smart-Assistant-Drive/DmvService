@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate
 @Suppress("TooGenericExceptionCaught")
 class HealthCheck : HealthIndicator {
 
-	private var logger: Logger = LoggerFactory.getLogger(HealthCheck::class.java)
+	private val logger: Logger = LoggerFactory.getLogger(HealthCheck::class.java)
 
 	override fun health(): Health {
 		val pair = check() // perform some specific health check

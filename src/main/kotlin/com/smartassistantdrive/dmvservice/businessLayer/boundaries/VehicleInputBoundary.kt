@@ -3,7 +3,7 @@ package com.smartassistantdrive.dmvservice.businessLayer.boundaries
 import com.smartassistantdrive.dmvservice.businessLayer.adapter.VehicleResponseModel
 
 /**
- * Car management.addRoadd
+ * Car management.
  */
 interface VehicleInputBoundary {
 
